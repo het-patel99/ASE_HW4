@@ -1,4 +1,5 @@
-
+import sys
+sys.path.append("./src")
 from typing import List
 import math
 import os
@@ -6,14 +7,15 @@ import csv
 import random
 import cols
 import row
-import sys
+
 import data
 import collections
+import copy as copy
+from utils import *
 
 script_sir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(script_sir)
 os.sys.path.insert(0,parent_dir)
-from tests.tests import *
 
 # set to their default values
 random_instance = random.Random()
@@ -26,7 +28,7 @@ Sample = 512
 help = False
 Far = 0.95
 
-def get_csv_contents(filepath: str) -> list[str]:
+def get_csv_contents(filepath: str):
 
     #try to catch relative paths
     if not os.path.isfile(filepath):
@@ -68,7 +70,7 @@ class Data():
     ## It also checks if the col names is being read has already being read or not
     ## if yes then it uses old rows
     ## else add the col rows.
-    def add(self, t: list[str]):
+    def add(self, t):
 
         if(self.cols is None):
             self.cols = cols.Cols(t)
@@ -99,24 +101,67 @@ class Data():
             d = d + col.dist(row1.cells[col.at], row2.cells[col.at]) ^ p
         return (d/n)^(1/p)
 
-    def around(self, rows):
-        return map(sorted(map(rows)))
+    def around(self, row1, rows= None, cols=None ):
+        if rows is None: rows = self.rows
 
-    def half(self, rows, cols, above):
+        def fun(row2):
+            return {"row": row2, "dist": self.dist(row1, row2, cols)}
+
+        mapped = map(fun, rows)
+        return sorted(mapped, key=lambda x: x["dist"])
+
+    def stats(self, what, cols, nPlaces):
+        def fun(_,cols):
+            if what == 'mid':
+                val = cols.mid()
+            else:
+                val = cols.div()
+            return cols.rnd(val, nPlaces), cols.txt
+
+        return kap(cols or self.cols.y, fun)
+
+
+
+    def furthest(self, row1, rows, cols,t):
+        t = self.around(row1,rows,cols)
+        furthest = t[len(t)-1]
+        return furthest
+
+    def half(self, rows = None , cols = None, above= None):
+
         rows = rows or self.rows
         some = many(rows,Sample)
         A = any(some)
         B = self.around(A,some)[(Far*len(rows)//1)]
-        C = self.dist(A,B)
+        c = self.dist(A,B)
         left = {}
         right = {}
-        for n,tmp in enumerate(collections.OrderedDict(sorted(rows.items()))):
+
+        def dist(row1, row2):
+            return self.dist(row1,row2,cols)
+        
+        def project(row):
+            x,y = cosine(dist(row,A), dist(row,B), c)
+            try:
+                row.x = row.x
+                row.y = row.y
+            except:
+                row.x = x
+                row.y = y
+            return (row, x, y)
+
+        result = []
+        for row in rows:
+            result.append(project(row))
+        result = sorted(result, key = lambda x:x[1])
+
+        for n,tmp in enumerate(result):
             if n<=len(rows)//2:
                 left.add(tmp.row)
                 mid = tmp.row
             else:
                 right.add(tmp.row)
-        return left, right, A,B,mid,C
+        return left, right, A,B,mid,c
 
     def cluster(self, rows, min, cols, above):
         rows = rows or self.rows
@@ -143,140 +188,5 @@ class Data():
                 node.left = self.sway(left,min,cols,node.A)
         return node
 
-def fmt(sControl: str, *args): #control string (format string)
-    for string in args:
-        print(string.format(sControl))
 
-# show function needs to be added
-def show(node, what, cols, nPlaces):
-    return ""
-
-def rnd(n, nPlaces = 3):
-    mult = math.pow(10, nPlaces)
-    return math.floor(n*mult + 0.5) / mult
-
-def o(t: object):
-    #todo()
-    return ""
-
-def rand(lo,hi):
-    lo = lo or 0
-    hi = hi or 1
-    seed = (16807 * seed) % 2147483647
-    return lo + (hi-lo) * seed / 2147483647
-
-def rint(lo,hi):
-    return math.floor(0.5 + rand(lo,hi))
-
-def any(t):
-    return t[rint(len(t))]
-
-def many(t,n):
-    u = {}
-    for i in range(1,n):
-        u[1+len(u)] = any(t)
-    return u
-
-
-# ------------------- MAIN PROGRAM FLOW -------------------
-
-## run_test counts the number of arguments that have been passed and failed and it also,
-## it displays the names tests passed and failed.
-def run_tests():
-    print("Executing tests...\n")
-
-    passCount = 0
-    failCount = 0
-    test_suite = [test_csv, test_show_dump, test_syms, test_nums, test_data, test_show_dump] 
-
-    for test in test_suite:
-        try:
-            test()
-            passCount = passCount + 1
-        except AssertionError as e:
-            failCount = failCount + 1
         
-
-    print("\nPassing: " + str(passCount) + "\nFailing: " + str(failCount))
-    
-# api-side function to get the current input csv filepath
-def get_file() -> str:
-    return file
-
-# uses the value of the dump parameter and passed exception to determine what message to display to the user
-def get_crashing_behavior_message(e: Exception):
-    crash_message = str(e)
-    if(dump):
-        crash_message = crash_message + '\n'
-        stack = traceback.extract_stack().format()
-        for item in stack:
-            crash_message = crash_message + item
-
-    return crash_message
-
-# api-side function to get the current seed value
-def get_seed() -> int:
-    return seed
-
-# api-side function to get the current dump boolean status
-def should_dump() -> bool:
-    return dump
-
-
-
-## find_arg_values gets the value of a command line argument
-# first it gets set of args
-# second it get option A (-h or -d or -s or -f )
-# third is get option B (--help or --dump or --seed or --file)
-def find_arg_value(args: list[str], optionA: str, optionB: str) -> str:
-    index = args.index(optionA) if optionA in args else args.index(optionB)
-    if (index + 1) < len(args):
-        return args[index + 1]
-    return None
-
-help_string = """cluster.lua : an example csv reader script
-(c)2022, Tim Menzies <timm@ieee.org>, BSD-2 
-
-USAGE: cluster.lua  [OPTIONS] [-g ACTION]
-
-OPTIONS:
-  -d  --dump    on crash, dump stack   = false
-  -f  --file    name of file           = ../etc/data/auto93.csv
-  -F  --Far     distance to "faraway"  = .95
-  -g  --go      start-up action        = data
-  -h  --help    show help              = false
-  -m  --min     stop clusters at N^min = .5
-  -p  --p       distance coefficient   = 2
-  -s  --seed    random number seed     = 937162211
-  -S  --Sample  sampling data size     = 512
-
-]]"""
-
-if __name__ == "__main__":
-    args = sys.argv
-    try:
-        if '-h' in args or '--help' in args:
-            print(help_string)
-
-        if '-d' in args or '--dump' in args:
-            dump = True
-
-        if '-f' in args or '--file' in args:
-            file = data.data(find_arg_value(args, '-f', '--file'))
-
-        if '-s' in args or '--seed' in args:
-            seed_value = find_arg_value(args, '-s', '--seed')
-            if seed_value is not None:
-                try:
-                    seed = int(seed_value)
-                except ValueError:
-                    raise ValueError("Seed value must be an integer!")
-            else:
-                print("USAGE: Provide an integer value following an -s or --seed argument to set the seed value.\n Example: (-s 3030, --seed 3030)")
-
-        # NOTE: the seed will be set in main, the rest of the application need not set it
-        random_instance.seed(seed)
-        if '-g' in args or '--go' in args:
-            run_tests()
-    except Exception as e:
-        print(get_crashing_behavior_message(e))

@@ -1,14 +1,15 @@
-
+import sys
+sys.path.append("./src")
 from num import Num
 from sym import Sym
-import row
+from row import Rows
 from collections import OrderedDict
 import re
 from enum import Enum
 
 class Cols:
 
-    def __init__(self, t: list[str]):
+    def __init__(self, t):
         self.names = t
         self.all = []
         self.x = []
@@ -25,7 +26,7 @@ class Cols:
                     else:
                         self.x.append(col)
                 
-    def add(self, row: row.Rows):
+    def add(self, row: Rows):
         for col in self.all:
             col.add(row.cells[col.at])
 
