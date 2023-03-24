@@ -4,7 +4,9 @@ import math
 import re 
 import json
 import io
-
+import copy as copyy
+from data import *
+from pprint import pprint
 egs = dict()
 options = dict()
 
@@ -13,7 +15,7 @@ def fmt(sControl: str, *args): #control string (format string)
         print(string.format(sControl))
 
 # show function needs to be added
-def show(node, what= None, cols= None, nPlaces= None, lvl = None):
+def show(node, what= None, cols= None, nPlaces= None, lvl = 0):
     if node:
         lvl = lvl or 0
         print("|.." * lvl, str(len(node["data"].rows)), " ")
@@ -28,9 +30,8 @@ def rnd(n, nPlaces = 3):
     mult = math.pow(10, nPlaces)
     return math.floor(n*mult + 0.5) / mult
 
-def o(t: object):
-    #todo()
-    return ""
+def o(t, isKeys=None):
+    return str(t)
 
 def rand(lo,hi):
     lo = lo or 0
@@ -45,7 +46,7 @@ def any(t):
     return t[rint(len(t))]
 
 def copy(t):
-    return copy.deepcopy(t)
+    return copyy.deepcopy(t)
 
 def many(t,n):
     u = {}
@@ -54,31 +55,63 @@ def many(t,n):
     return u
 
 def cosine(a, b, c):
-    if(c == 0):
-        den =1
-    else:
-        den = 2*c
-    x1 = ((a**2 + c**2 - b**2)/den)
-    x2 = max(0,min(x1,1))
-    y = abs((a**2 - x2**2)**0.5)
+    x1 = (a**2 + c**2 - b**2) / (2*c)
+    x2 = max(0, min(1, x1))
+    y  = (a**2 - x2**2)**.5
+    return x2, y
 
-    return x2,y
+def sort(t):
+    #Doubt
+    return t
 
-def repCols(cols, DATA):
+# function sort(t, fun) --> t; return `t`,  sorted by `fun` (default= `<`)
+#   table.sort(t,fun); return t end
+
+def lt(x):
+    def fun(a, b):
+        return a[x] < b[x]
+
+def keys(t):
+    #Doubt
+    pass
+
+def push(t, x):
+    t.append(x)
+
+def repCols(cols):
     cols = copy(cols)
-    for c in cols:
-        c[len(c) - 1] = c[0] + ":" + c[len(c) - 1]
-        for j in range(1, len(c)):
-            c[j-1] = c[j]
-        c.pop()
-    c1=list()
-    for i in range(len(cols[1])-1):
-        c1 = ['Num' + str(i+1)]
-    c1.append('thingX')
-    cols.insert(0, c1)
-    return DATA(cols)
+    # for i,col in enumerate(cols):
+    #     col[len(col) - 1] = col[0] + ":" + col[len(col) - 1]
+    #     for j in range(1, len(col)):
+    #         col[j - 1] = col[j]
+    #     col.pop()
+    # s=[]
+    # for i in range(len(cols[0])):
+    #     s.append("Num"+str(i))
+    # cols.insert(0, s)
+    # cols[0][len(cols[0]) - 1] = "thingX"
+    # data = Data(cols)
+    # return data
 
-def repRows(t, rows, DATA):
+    
+    for col in cols:
+        col[-1] = str(col[0]) + ":" + str(col[-1])
+        for j in range(1, len(col)):
+            col[j-1] = col[j]
+        col.pop()
+    cols.insert(0, ["Num" + str(i) for i in range(1, len(cols[0]) + 1)])
+    cols[0][-1] = "thingX"
+    return Data(cols)
+
+
+def push(t, x):
+    """
+    push `x` to end of list; return `x` 
+    """
+    t.append(x)
+    return x
+
+def repRows(t, rows):
     rows = copy(rows)
     for j, s in enumerate(rows[-1]):
         rows[0][j] = str(rows[0][j]) + ":" + str(s)
@@ -89,27 +122,30 @@ def repRows(t, rows, DATA):
         else:
             u=t["rows"][len(t["rows"])-n]
             row.append(u[len(u) - 1])
-            from pprint import pprint
-        
-    for i in DATA(rows).rows: pprint(vars(i))
-    return  DATA(rows)
+    return  Data(rows)
 
-def dofile(f):
-    with open(f,'r', encoding='utf-8') as file:
-        text = re.findall(r'(return\s+[^.]+)',  f.read())[0]
-        replacements = {'return ' : '', '{' : '[', '}' : ']','=':':', '[\n':'{\n', '\n]':'\n}', '_':'"_"', '\'':'"'}
-        for a,b in replacements.items():
-            text = text.replace(a, b)
+def dofile(file):
+    file = open(file, "r", encoding="utf-8")
+    text = (
+        re.findall(r"(?<=return )[^.]*", file.read())[0]
+        .replace("{", "[")
+        .replace("}", "]")
+        .replace("=", ":")
+        .replace("[\n", "{\n")
+        .replace(" ]", " }")
+        .replace("'", '"')
+        .replace("_", '"_"')
+    )
+    file.close()
+    file_json = json.loads(re.sub(r"(\w+):", r'"\1":', text)[:-2] + "}")
+    return file_json
 
-        text = re.sub("(\w+):",r'"\1":', text)
-        return json.loads(text)
-
-def repgrid(file, DATA):
+def repgrid(file):
     t = dofile(file)
-    rows = repRows(t, transpose(t['cols']), DATA)
-    cols = repCols(t['cols'], DATA)
-    show(rows.cluster(),"mid",rows.cols.all,1)
-    show(cols.cluster(),"mid",cols.cols.all,1)
+    rows = repRows(t, transpose(t['cols']))
+    cols = repCols(t['cols'])
+    show(rows.cluster())
+    show(cols.cluster())
     repPlace(rows)
 
 def repPlace(data):
@@ -144,45 +180,28 @@ def transpose(t):
     return result
 
 def kap(t, fun):
-    result = {}
-    for v in t:
-        k = t.index(v)
-        v, k = fun(k,v)
-        result[k or len(result)] = v
-    return result
+    u = {}
+    for k,v in enumerate(t):
+        v,k = fun(k,v)
+        u[k or (1+len(u))] = v
+    
+    return u
 
-def coerce(s):
-    if s == 'true':
+def coerce(s): #Doubt
+    if s == "true":
         return True
-    elif s == 'false':
+    elif s == "false":
         return False
-    elif s.isdigit():
-        return int(s)
-    elif '.' in s and s.replace('.','').isdigit():
+    elif re.search(r"[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?$", s) is not None:
         return float(s)
     else:
         return s
     
 def oo(t):
-    temp = t.__dict__
-    temp['a'] = t.__class__.__name__
-    temp['id'] = id(t)
-    print(dict(sorted(temp.items())))
+    print(o(t))
+    return t
 
 
-def eg(key, str, fun):
-    egs[key] = fun
-    global help 
-    help = help + ' -g ' + key + '\t' + str + '\n'
-
-def csv(filename, fun):
-    f = io.open(filename)
-    while True:
-        s = f.readline()
-        if s:
-            t = []
-            for s1 in re.findall("([^,]+)" ,s):
-                t.append(coerce(s1))
-            fun(t)
-        else:
-            return f.close()
+    
+def settings(s, t):
+    return dict(re.findall(r"\n[\s]+[-][\S]+[\s]+[-][-]([\S]+)[^\n]+= ([\S]+)", s))
