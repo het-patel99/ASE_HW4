@@ -6,6 +6,7 @@ import json
 import copy as copyy
 from data import *
 from pprint import pprint
+from pathlib import Path
 egs = dict()
 options = dict()
 
@@ -79,26 +80,12 @@ def push(t, x):
 
 def repCols(cols):
     cols = copy(cols)
-    # for i,col in enumerate(cols):
-    #     col[len(col) - 1] = col[0] + ":" + col[len(col) - 1]
-    #     for j in range(1, len(col)):
-    #         col[j - 1] = col[j]
-    #     col.pop()
-    # s=[]
-    # for i in range(len(cols[0])):
-    #     s.append("Num"+str(i))
-    # cols.insert(0, s)
-    # cols[0][len(cols[0]) - 1] = "thingX"
-    # data = Data(cols)
-    # return data
-
-    
     for col in cols:
         col[-1] = str(col[0]) + ":" + str(col[-1])
         for j in range(1, len(col)):
             col[j-1] = col[j]
         col.pop()
-    cols.insert(0, ["Num" + str(i) for i in range(1, len(cols[0]) + 1)])
+    cols.insert(0, ["Num" + str(i) for i in range(0, len(cols[0]))])
     cols[0][-1] = "thingX"
     return Data(cols)
 
@@ -121,53 +108,50 @@ def repRows(t, rows):
         else:
             u=t["rows"][len(t["rows"])-n]
             row.append(u[len(u) - 1])
-    return  Data(rows)
+    return Data(rows)
 
-def dofile(file):
-    file = open(file, "r", encoding="utf-8")
-    text = (
-        re.findall(r"(?<=return )[^.]*", file.read())[0]
-        .replace("{", "[")
-        .replace("}", "]")
-        .replace("=", ":")
-        .replace("[\n", "{\n")
-        .replace(" ]", " }")
-        .replace("'", '"')
-        .replace("_", '"_"')
+def dofile(filepath):
+    filepath = (Path(__file__).parent / filepath).resolve()
+    file = open(filepath,"r",encoding = "utf-8")
+    temp = (
+    re.findall(r"(?<=return )[^.]*", file.read())[0]
+    .replace("{", "[")
+    .replace("}", "]")
+    .replace("=", ":")
+    .replace("[\n", "{\n")
+    .replace(" ]", " }")
+    .replace("'", '"')
+    .replace("_", '"_"')
     )
     file.close()
-    file_json = json.loads(re.sub(r"(\w+):", r'"\1":', text)[:-2] + "}")
-    return file_json
+    f = json.loads(re.sub(r"(\w+):", r'"\1":', temp)[:-2] + "}")
+    return f
 
 def repgrid(file):
     t = dofile(file)
-    rows = repRows(t, transpose(t['cols']))
-    cols = repCols(t['cols'])
+    rows = repRows(t, transpose(t["cols"]))
+    cols = repCols(t["cols"])
     show(rows.cluster())
     show(cols.cluster())
     repPlace(rows)
 
 def repPlace(data):
-    n,g = 20,{}
-    for i in range(1, n+1):
-        g[i]={}
-        for j in range(1, n+1):
-            g[i][j]=" "
-    maxy = 0
+    n,g = 20,[]
+    for i in range(n+1):
+        g.append([])
+        for j in range(n+1):
+            g[i].append(" ")
+    maxy=0
     print("")
     for r,row in enumerate(data.rows):
-        c = chr(97+r).upper()
+        c = chr(r+65)
         print(c, row.cells[-1])
-        
-        if( math.isnan(row.x) or math.isnan(row.y)):
-            continue
-        x=int(row.x*n/1)
-        y=int(row.y*n/1)
-        maxy = int(max(maxy, y+1))
-        g[y+1][x+1] = c
+        x, y= int(row.x*n), int(row.y*n)
+        maxy = max(maxy,y)
+        g[y][x] = c
     print("")
-    for y in range(1,maxy+1):
-        print(" ".join(g[y].values()))
+    for y in range(maxy):
+        print("{" + "".join(g[y]) + "}")
 
 def transpose(t):
     result=[]

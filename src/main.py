@@ -30,7 +30,7 @@ for k,v in ENV:
 
 options = "hg"
 long_options = []
-the = {"seed": 937162211, "dump": False, "go": "data", "help": False, "min" : 0.5, "p" : 2, "Sample" : 512, "Far" : 0.95 }
+the = {"seed": 937162211, "dump": False, "go": "data", "help": False, "min" : 0.5, "p" : 2, "Sample" : 512, "Far" : 0.95 ,"file" : "../etc/data/repgrid2.csv"}
     
 def help():
     help_string = """cluster.lua : an example csv reader script
