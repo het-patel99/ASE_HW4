@@ -12,7 +12,7 @@ class Cols:
         self.klass = None
 
         for n, s in enumerate(t):
-            col = num.Num(n,s) if re.match("^[A-Z]",s) else sym.Sym(n,s)
+            col = num.Num(n,s) if re.match("^[A-Z]+",s) else sym.Sym(n,s)
             self.all.append(col)
             if not re.match("X$",s):
                 if re.match("!$",s):

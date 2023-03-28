@@ -1,3 +1,4 @@
+import collections
 import math
 
 class Sym:
@@ -7,7 +8,7 @@ class Sym:
         self.txt = txt
         self.n = 0
         self.most = 0
-        self.has = {}
+        self.has = collections.defaultdict(int)
         self.mode = None
 
     def add(self, x):

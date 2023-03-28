@@ -3,16 +3,15 @@ sys.path.append("./src")
 import math
 import re 
 import json
-import io
 import copy as copyy
 from data import *
 from pprint import pprint
 egs = dict()
 options = dict()
 
-def fmt(sControl: str, *args): #control string (format string)
-    for string in args:
-        print(string.format(sControl))
+# def fmt(sControl: str, *args): #control string (format string)
+#     for string in args:
+#         print(string.format(sControl))
 
 # show function needs to be added
 def show(node, what= None, cols= None, nPlaces= None, lvl = 0):

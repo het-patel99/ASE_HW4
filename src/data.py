@@ -15,51 +15,51 @@ def csv_content(src):
         for row in csvFile:
             res.append(row)
     return res
-class Data():
+class Data:
     
 
     ## constructor created for data.py class
-    def __init__(self, src):
-        self.rows = []
-        self.cols = None
-        self.count = 0
-
-        if type(src) == str:
-            csv_list = csv_content(src)
-            for line,row in enumerate(csv_list):
-                row_cont = []
-                for oth_line,val in enumerate(row):
-                    row_cont.append(val.strip())
-                    self.count+=1
-                self.add(row_cont)
-
-        else:
-            for l in src:
-                self.add(l)
-
     # def __init__(self, src):
     #     self.rows = []
     #     self.cols = None
+    #     self.count = 0
 
     #     if type(src) == str:
-    #         csv(src, self.add)
+    #         csv_list = csv_content(src)
+    #         for line,row in enumerate(csv_list):
+    #             row_cont = []
+    #             for oth_line,val in enumerate(row):
+    #                 row_cont.append(val.strip())
+    #                 self.count+=1
+    #             self.add(row_cont)
+
     #     else:
-    #         for t in src:
-    #             self.add(t)
+    #         for l in src:
+    #             self.add(l)
+
+    def __init__(self, src):
+        self.rows = []
+        self.cols = None
+
+        if type(src) == str:
+            csv(src, self.add)
+        else:
+            for t in src:
+                self.add(t)
     ## add method adds the row read from csv file
     ## It also checks if the col names is being read has already being read or not
     ## if yes then it uses old rows
     ## else add the col rows.
     def add(self, t):
         if (self.cols):
-            
-            nrow = row.Rows(t)
-            self.rows.append(nrow.cells)
-            self.cols.add(nrow)
+            t = t if hasattr(t, 'cells') else row.Rows(t)
+            self.rows.append(t)
+            self.cols.add(t)
         else:
             self.cols = cols.Cols(t)
 
-    def clone(self,init):
+
+    def clone(self,init = []):
         new_data = Data(self.cols.names)
         for row in init:
             new_data.add(row)
@@ -78,7 +78,7 @@ class Data():
         n, d = 0, 0
         for _, col in enumerate(cols or self.cols.x):
             n = n + 1
-            val = col.dist(row1[col.at], row2[col.at])
+            val = col.dist(row1.cells[col.at], row2.cells[col.at])
             d = d + val ** 2
         return (d / n) ** (1 / 2)
 
@@ -93,18 +93,19 @@ class Data():
 
     def stats(self,what,cols,nPlaces):
         def fun(k,col):
-            f = getattr(col,what)
+            f = getattr(col,what or "mid")
             return col.rnd(f(),nPlaces), col.txt
         
         return utils.kap(cols,fun)
 
-    def furthest(self, row1, rows=None, cols=None):
+    def furthest(self, row1 = None, rows=None, cols=None):
         t = self.around(row1,rows,cols)
-        furthest = t[len(t)-1]
-        return furthest
+        furt = t[-1]
+        return furt
 
     def half(self, rows = None , cols = None, above= None):
-
+        def new_dist(row1, row2):
+            return self.dist(row1,row2,cols)
         rows = rows or self.rows
         some = utils.many(rows,the.Sample)
         A = utils.any(some)
@@ -112,15 +113,12 @@ class Data():
         # if rows is None: rows = self.rows
         # A = above or any(rows)
         # B = self.furthest(A, rows)['row']
-        c = self.dist(A,B)
-        left = {}
-        right = {}
+        c = new_dist(A,B)
+        left = []
+        right = []
 
-        def dist(row1, row2):
-            return self.dist(row1,row2,cols)
-        
         def project(row):
-            x,y = utils.cosine(dist(row,A), dist(row,B), c)
+            x,y = utils.cosine(new_dist(row,A), new_dist(row,B), c)
             try:
                 row.x = row.x
                 row.y = row.y
@@ -132,26 +130,26 @@ class Data():
         result = []
         for row in rows:
             result.append(project(row))
-        result = sorted(result, key = lambda x:x[1])
+        result = sorted(result, key = lambda x:x["x"])
 
         for n,tmp in enumerate(result):
-            if n<=len(rows)//2:
-                left.add(tmp.row)
-                mid = tmp.row
+            if n+1<=len(rows)//2:
+                left.append(tmp["row"])
+                mid = tmp["row"]
             else:
-                right.add(tmp.row)
+                right.append(tmp["row"])
         return left, right, A,B,mid,c
 
-    def cluster(self, rows= None, min_size= None, cols= None, above= None):
+    def cluster(self, rows=None,cols=None, above=None):
         rows = rows or self.rows
-        min_value = min_size or (len(rows))** 0.5
-        if not cols:
-            cols = self.cols.x
-        node = { 'data' : self.clone(rows) }
-        if len(rows)>2*min_value:
-            left, right, node.A, node.B, node.mid = self.half(rows,cols,above)
-            node.left = self.cluster(left,min,cols,node.A)
-            node.right = self.cluster(right,min,cols,node.B)
+        cols = cols or self.cols.x
+        node = {'data': self.clone(rows)} 
+
+        if len(rows) >= 2:
+            left, right, node["A"], node["B"], node["mid"], node["C"] = self.half(rows, cols, above)
+            node["left"]  = self.cluster(left,cols, node["A"])
+            node["right"] = self.cluster(right,cols, node["B"])
+        
         return node
 
 

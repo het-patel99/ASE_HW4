@@ -2,7 +2,7 @@ import math
 from utils import *
 
 class Num:
-    def __init__(self, at=None, txt=""):
+    def __init__(self, at=0, txt=""):
         self.at = at
         self.txt = txt
         self.n = 0
@@ -14,8 +14,7 @@ class Num:
 
 
     def add(self, n):
-        if n !="?":
-            n = float(n)
+        if n != 0:
             self.n = self.n + 1
             d = n - self.mu
             self.mu = self.mu + (d / self.n)
