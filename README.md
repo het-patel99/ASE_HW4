@@ -5,8 +5,8 @@ Automated Software Engineering - HW4
 ![GitHub](https://img.shields.io/github/license/het-patel99/ASE_HW4)
 ![GitHub issues](https://img.shields.io/github/issues/het-patel99/ASE_HW4)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/het-patel99/ASE_HW4)
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/katmit/ASE_HW4/unit_test.yml)
-![github workflow](https://github.com/katmit/ASE_HW4/actions/workflows/unit_test.yml/badge.svg)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/het-patel99/ASE_HW4/unit_test.yml)
+![github workflow](https://github.com/het-patel99/ASE_HW4/actions/workflows/unit_test.yml/badge.svg)
 
 # How to Run??
 
