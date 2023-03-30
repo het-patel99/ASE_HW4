@@ -1,66 +1,54 @@
-# ------------------- MAIN PROGRAM FLOW -------------------
-
-## run_test counts the number of arguments that have been passed and failed and it also,
-## it displays the names tests passed and failed.
-
-import sys, getopt
-# from tests import test_syms,test_nums, test_the,test_copy,test_repCols,test_repCols,test_synonyms,test_prototypes,test_position,test_every
 from tests import *
+import utils
 
-def run_tests():
-    print("Executing tests...\n")
+def main(inputs, help, funcs, saved = {}, fails = 0):
+    for k, v in utils.cli(utils.settings(help)).items():
+        inputs[k] = v
+        saved[k] = v
+    if inputs["help"]:
+        print(help)
+    else:
+        print("Testing...")
+        for what in funcs:
+            if inputs["go"] == "data" or what == inputs["go"]:
+                for k,v in saved.items():
+                    inputs[k] = v
+                if funcs[what]() == False:
+                    fails = fails + 1
+                    print(what, ": failing")
+                else:
+                    print(what, ": passing")
+    exit(fails)
 
-    passCount = 0
-    failCount = 0
-    test_suite = [test_syms,test_nums, test_the,test_copy,test_repCols,test_repCols,test_synonyms,test_prototypes,test_position,test_every] 
-    
-    for test in test_suite:
-        try:
-            test()
-            passCount = passCount + 1
-        except AssertionError as e:
-            failCount = failCount + 1
-    print("\nPassing: " + str(passCount) + "\nFailing: " + str(failCount))
+the = {'dump': False, 'go': 'data', 'help': False, 'seed': 937162211, 'file' : '../etc/data/repgrid3.csv'}
 
-argumentList = sys.argv[1:]
-b4={}
-ENV = {}
-for k,v in ENV:
-    b4[k]=v
+help = """"   
+grid.lua : a rep grid processor
+(c)2022, Tim Menzies <timm@ieee.org>, BSD-2 
+USAGE: grid.lua  [OPTIONS] [-g ACTION]
+OPTIONS:
+  -d  --dump    on crash, dump stack   = false
+  -f  --file    name of file           = ../etc/data/repgrid3.csv
+  -g  --go      start-up action        = data
+  -h  --help    show help              = false
+  -p  --p       distance coefficient   = 2
+  -s  --seed    random number seed     = 937162211
+ACTIONS:
+"""
+egs = {}
+def eg(key, str, func):
+    egs[key] = func
+    inputs.help = inputs.help + ("  -g  %s\t%s\n" % (key,str))
 
-options = "hg"
-long_options = []
-the = {"seed": 937162211, "dump": False, "go": "data", "help": False, "min" : 0.5, "p" : 2, "Sample" : 512, "Far" : 0.95 ,"file" : "../etc/data/repgrid2.csv"}
-    
-def help():
-    help_string = """cluster.lua : an example csv reader script
-    (c)2022, Tim Menzies <timm@ieee.org>, BSD-2 
-    USAGE: cluster.lua  [OPTIONS] [-g ACTION]
-    OPTIONS:
-    -d  --dump    on crash, dump stack   = false
-    -f  --file    name of file           = ../etc/data/repgrid2.csv
-    -F  --Far     distance to "faraway"  = .95
-    -g  --go      start-up action        = data
-    -h  --help    show help              = false
-    -m  --min     stop clusters at N^min = .5
-    -p  --p       distance coefficient   = 2
-    -s  --seed    random number seed     = 937162211
-    -S  --Sample  sampling data size     = 512
-    ]]"""
+eg("sym","check syms",test_sym)
+eg("num","check nums",test_nums)
+eg("the","show settings", test_the)
+eg("repCols","check repCols",test_repCols)
+eg("repRows","check repRows",test_repRows)
+eg("synonyms","check synonyms", test_synonyms)
+eg("prototypes","check prototypes",test_prototypes)
+eg("position","check position", test_position)
+eg("every","check every", test_every)
 
-def main():
-    try:    
-        # Parsing argument
-        arguments, values = getopt.getopt(argumentList, options, long_options)
-        # checking each argument
-        for currentArgument, currentValue in arguments:
-             if currentArgument in ('-h', ''):
-                 help()
-             if currentArgument in ("-g", ''):
-                run_tests()
-                
-    except getopt.error as err:
-        print (str(err))
-
-if __name__ == "__main__":
-    main()
+print(egs)
+main(inputs.the, inputs.help, egs)

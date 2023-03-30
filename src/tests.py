@@ -1,90 +1,63 @@
-import sys
-sys.path.append("./src")
-
-from num import Num
 from sym import Sym
-from utils import utils
+from num import Num
 from data import *
-from main import *
-from pathlib import Path
-import os 
+import utils
+import inputs
 
+data = Data(inputs.the["file"])
 
-
-def test_syms():
+def test_sym():
     value = ['a', 'a', 'a', 'a', 'b', 'b', 'c']
     sym1 = Sym()
     for x in value:
         sym1.add(x)
-    print("test_syms: PASS\n")
-    return "a"==sym1.mid() and 1.379 == utils.rnd(sym1.div(),3)
-
-def test_the():
-    # oo(options)
-    print(options)
-    return True
-
-
-def test_copy():  # copy
-    t1 = {'a': 1, 'b': {'c': 2, 'd': [3]}}
-    t2 = utils.copy(t1)
-    t2['b']['d'][0] = 10000
-    print('b4', t1, '\nafter', t2)
+    print("sym1 information: ",sym1)
+    print("test_sym : passed")
+    return "a"==sym1.mid() and 1.379 == utils.rnd(sym1.div())
 
 def test_nums():
     val = Num()
     lst = [1,1,1,1,2,2,3]
     for a in lst:
         val.add(a)
-    print("test_nums: PASS\n")
-    return 11/7 == val.mid() and 0.787 == utils.rnd(val.div(),3)
+    assert 11/7 == val.mid() and 0.787 == utils.rnd(val.div())
+    print("Val information: ", val)
+    return 11/7 == val.mid() and 0.787 == utils.rnd(val.div())
+
+def test_the():
+    print(str(inputs.the))
 
 def test_repCols():
-    root = str(Path(__file__).parent.parent.parent)
-    csv_path = os.path.join(root, "ASE_HW4/etc/data/repgrid2.csv")
-    t = utils.repCols(utils.dofile(csv_path)['cols'])
+    t = utils.repCols(utils.dofile(inputs.the["file"])['cols'])
     for col in t.cols.all:
         utils.oo(col)
     for row in t.rows:
         utils.oo(row)
-
+    print(t)
 
 def test_repRows():
-    root = str(Path(__file__).parent.parent.parent)
-    csv_path = os.path.join(root, "ASE_HW4/etc/data/repgrid2.csv")
-    t = utils.dofile(csv_path)
+    t = utils.dofile(inputs.the["file"])
     rows = utils.repRows(t, utils.transpose(t['cols']))
     for col in rows.cols.all:
         utils.oo(col)
     for row in rows.rows:
         utils.oo(row)
-
+    print(t)
 
 def test_synonyms():
-    root = str(Path(__file__).parent.parent.parent)
-    csv_path = os.path.join(root, "ASE_HW4/etc/data/repgrid2.csv")
-    utils.show(node=utils.repCols(utils.dofile(csv_path)['cols']).cluster())
-
+    print(utils.show(node=utils.repCols(utils.dofile(inputs.the["file"])['cols']).cluster()))
 
 def test_prototypes():
-    root = str(Path(__file__).parent.parent.parent)
-    csv_path = os.path.join(root, "ASE_HW4/etc/data/repgrid2.csv")
-    t = utils.dofile(csv_path)
+    t = utils.dofile(inputs.the["file"])
     rows = utils.repRows(t, utils.transpose(t['cols']))
-    utils.show(rows.cluster())
-
+    print(utils.show(rows.cluster()))
 
 def test_position():
-    root = str(Path(__file__).parent.parent.parent)
-    csv_path = os.path.join(root, "ASE_HW4/etc/data/repgrid2.csv")
-    t = utils.dofile(csv_path)
+    t = utils.dofile(inputs.the["file"])
     rows = utils.repRows(t, utils.transpose(t['cols']))
     rows.cluster()
-    utils.repPlace(rows)
-
+    print(utils.repPlace(rows))
 
 def test_every():
-    root = str(Path(__file__).parent.parent.parent)
-    csv_path = os.path.join(root, "ASE_HW4/etc/data/repgrid2.csv")
-    utils.repgrid(csv_path)
+    print(utils.repgrid(inputs.the["file"]))
 

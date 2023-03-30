@@ -1,0 +1,20 @@
+local _ = " "
+return {
+domain="Mobile phones",
+cols={ {'Budget Friendly', 4, 2, 3, 5, 4, 1, 'Premium'},
+{'Small Screen', 4, 2, 3, 5, 4, 1, 'Large Screen'},
+{'Low Battery Life', 5, 3, 2, 4, 4, 1, 'High Battery Life'},
+{'Limited Storage', 5, 3, 2, 4, 4, 1, 'High Storage'},
+{'Average Camera', 5, 3, 2, 4, 4, 1, 'High-end Camera'},
+{'Plastic Body', 5, 3, 2, 4, 4, 1, 'Metal Body'},
+{'No Water Resistance', 5, 3, 2, 4, 4, 1, 'Water Resistance'},
+{'Older OS Version', 5, 3, 2, 4, 4, 1, 'Latest OS Version'},
+{'No Fast Charging', 5, 3, 2, 4, 4, 1, 'Fast Charging Support'},
+{'No 5G Support', 5, 3, 2, 4, 4, 1, '5G Support'}},
+rows={ { _, _, _, _, _,'Samsung Galaxy S21'},
+{ _, _, _, _, 'iPhone 13'},
+{ _, _, _, 'OnePlus 9T'},
+{ _, _,'Google Pixel 6'},
+{ _,'Xiaomi Mi 12'},
+{'Realme GT Neo 2'}}
+}
