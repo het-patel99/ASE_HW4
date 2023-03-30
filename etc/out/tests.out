@@ -1,24 +1,155 @@
-============================= test session starts =============================
-platform win32 -- Python 3.10.2, pytest-7.2.1, pluggy-1.0.0
-rootdir: D:\Documents\ASE_HW2\tests
-collected 5 items
+=================================================================== test session starts ===================================================================
 
-tests.py 
-test_csv: PASS
-.
-test_show_dump: PASS
-.
-test_syms: PASS
-.
-test_nums: PASS
-.
+platform linux -- Python 3.8.10, pytest-7.2.2, pluggy-1.0.0
+rootdir: /home/het0199/Documents/NCSU_SEM-4/ASE/ASE_HW4/src
+collected 9 items 
 
-test_data: PASS
+/home/het0199/Documents/NCSU_SEM-4/ASE/ASE_HW4/etc/data/repgrid3.csv
+{'sym': <function test_sym at 0x7f34d72a6160>, 'num': <function test_nums at 0x7f34d72a61f0>, 'the': <function test_the at 0x7f34d72a6280>, 'repCols': <function test_repCols at 0x7f34d72a6310>, 'repRows': <function test_repRows at 0x7f34d72a63a0>, 'synonyms': <function test_synonyms at 0x7f34d72a6430>, 'prototypes': <function test_prototypes at 0x7f34d72a64c0>, 'position': <function test_position at 0x7f34d72a6550>, 'every': <function test_every at 0x7f34d72a65e0>}
+Testing...
+sym1 information:  <sym.Sym object at 0x7f34d7362fd0>
+test_sym : passed
+sym : passing
+Val information:  <num.Num object at 0x7f34d73628e0>
+num : passing
+{'dump': False, 'go': 'data', 'help': False, 'seed': 937162211, 'file': '../etc/data/repgrid3.csv', 'p': 2}
+the : passing
+{'a': 'Num', 'at': 0, 'hi': 5, 'id': 139864925400704, 'lo': 4, 'm2': 1.6000000000000028, 'mu': 4.799999999999999, 'n': 10, 'txt': 'Num0', 'w': 1}
+{'a': 'Num', 'at': 1, 'hi': 3, 'id': 139864925400848, 'lo': 2, 'm2': 1.5999999999999996, 'mu': 2.8, 'n': 10, 'txt': 'Num1', 'w': 1}
+{'a': 'Num', 'at': 2, 'hi': 3, 'id': 139864925400512, 'lo': 2, 'm2': 1.5999999999999996, 'mu': 2.2, 'n': 10, 'txt': 'Num2', 'w': 1}
+{'a': 'Num', 'at': 3, 'hi': 5, 'id': 139864925400800, 'lo': 4, 'm2': 1.6000000000000028, 'mu': 4.200000000000001, 'n': 10, 'txt': 'Num3', 'w': 1}
+{'a': 'Num', 'at': 4, 'hi': 4, 'id': 139864925400752, 'lo': 4, 'm2': 0.0, 'mu': 4.0, 'n': 10, 'txt': 'Num4', 'w': 1}
+{'a': 'Num', 'at': 5, 'hi': 1, 'id': 139864925400560, 'lo': 1, 'm2': 0.0, 'mu': 1.0, 'n': 10, 'txt': 'Num5', 'w': 1}
+{'a': 'Sym', 'at': 6, 'has': defaultdict(<class 'int'>, {'Budget Friendly:Premium': 1, 'Small Screen:Large Screen': 1, 'Low Battery Life:High Battery Life': 1, 'Limited Storage:High Storage': 1, 'Average Camera:High-end Camera': 1, 'Plastic Body:Metal Body': 1, 'No Water Resistance:Water Resistance': 1, 'Older OS Version:Latest OS Version': 1, 'No Fast Charging:Fast Charging Support': 1, 'No 5G Support:5G Support': 1}), 'id': 139864925401040, 'mode': 'Budget Friendly:Premium', 'most': 1, 'n': 10, 'txt': 'thingX'}
+{'a': 'Rows', 'cells': [4, 2, 3, 5, 4, 1, 'Budget Friendly:Premium'], 'id': 139864925400464, 'x': None, 'y': None}
+{'a': 'Rows', 'cells': [4, 2, 3, 5, 4, 1, 'Small Screen:Large Screen'], 'id': 139864925400656, 'x': None, 'y': None}
+{'a': 'Rows', 'cells': [5, 3, 2, 4, 4, 1, 'Low Battery Life:High Battery Life'], 'id': 139864926319616, 'x': None, 'y': None}
+{'a': 'Rows', 'cells': [5, 3, 2, 4, 4, 1, 'Limited Storage:High Storage'], 'id': 139864924938352, 'x': None, 'y': None}
+{'a': 'Rows', 'cells': [5, 3, 2, 4, 4, 1, 'Average Camera:High-end Camera'], 'id': 139864924938448, 'x': None, 'y': None}
+{'a': 'Rows', 'cells': [5, 3, 2, 4, 4, 1, 'Plastic Body:Metal Body'], 'id': 139864924938544, 'x': None, 'y': None}
+{'a': 'Rows', 'cells': [5, 3, 2, 4, 4, 1, 'No Water Resistance:Water Resistance'], 'id': 139864924938640, 'x': None, 'y': None}
+{'a': 'Rows', 'cells': [5, 3, 2, 4, 4, 1, 'Older OS Version:Latest OS Version'], 'id': 139864924938736, 'x': None, 'y': None}
+{'a': 'Rows', 'cells': [5, 3, 2, 4, 4, 1, 'No Fast Charging:Fast Charging Support'], 'id': 139864924938832, 'x': None, 'y': None}
+{'a': 'Rows', 'cells': [5, 3, 2, 4, 4, 1, 'No 5G Support:5G Support'], 'id': 139864924938928, 'x': None, 'y': None}
+<data.Data object at 0x7f34d7369040>
+repCols : passing
+{'a': 'Num', 'at': 0, 'hi': 5, 'id': 139864925400752, 'lo': 1, 'm2': 10.833333333333336, 'mu': 3.166666666666667, 'n': 6, 'txt': 'Budget Friendly:Premium', 'w': 1}
+{'a': 'Num', 'at': 1, 'hi': 5, 'id': 139864925400560, 'lo': 1, 'm2': 10.833333333333336, 'mu': 3.166666666666667, 'n': 6, 'txt': 'Small Screen:Large Screen', 'w': 1}
+{'a': 'Num', 'at': 2, 'hi': 5, 'id': 139864925400464, 'lo': 1, 'm2': 10.833333333333336, 'mu': 3.166666666666667, 'n': 6, 'txt': 'Low Battery Life:High Battery Life', 'w': 1}
+{'a': 'Num', 'at': 3, 'hi': 5, 'id': 139864925400992, 'lo': 1, 'm2': 10.833333333333336, 'mu': 3.166666666666667, 'n': 6, 'txt': 'Limited Storage:High Storage', 'w': 1}
+{'a': 'Num', 'at': 4, 'hi': 5, 'id': 139864925400656, 'lo': 1, 'm2': 10.833333333333336, 'mu': 3.166666666666667, 'n': 6, 'txt': 'Average Camera:High-end Camera', 'w': -1}
+{'a': 'Num', 'at': 5, 'hi': 5, 'id': 139864925400608, 'lo': 1, 'm2': 10.833333333333336, 'mu': 3.166666666666667, 'n': 6, 'txt': 'Plastic Body:Metal Body', 'w': 1}
+{'a': 'Num', 'at': 6, 'hi': 5, 'id': 139864924938304, 'lo': 1, 'm2': 10.833333333333336, 'mu': 3.166666666666667, 'n': 6, 'txt': 'No Water Resistance:Water Resistance', 'w': 1}
+{'a': 'Num', 'at': 7, 'hi': 5, 'id': 139864924938352, 'lo': 1, 'm2': 10.833333333333336, 'mu': 3.166666666666667, 'n': 6, 'txt': 'Older OS Version:Latest OS Version', 'w': 1}
+{'a': 'Num', 'at': 8, 'hi': 5, 'id': 139864924938400, 'lo': 1, 'm2': 10.833333333333336, 'mu': 3.166666666666667, 'n': 6, 'txt': 'No Fast Charging:Fast Charging Support', 'w': 1}
+{'a': 'Num', 'at': 9, 'hi': 5, 'id': 139864924938448, 'lo': 1, 'm2': 10.833333333333336, 'mu': 3.166666666666667, 'n': 6, 'txt': 'No 5G Support:5G Support', 'w': 1}
+{'a': 'Sym', 'at': 10, 'has': defaultdict(<class 'int'>, {'Realme GT Neo 2': 1, 'Xiaomi Mi 12': 1, 'Google Pixel 6': 1, 'OnePlus 9T': 1, 'iPhone 13': 1, 'Samsung Galaxy S21': 1}), 'id': 139864924938496, 'mode': 'Realme GT Neo 2', 'most': 1, 'n': 6, 'txt': 'thingX'}
+{'a': 'Rows', 'cells': [4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 'Realme GT Neo 2'], 'id': 139864925400800, 'x': None, 'y': None}
+{'a': 'Rows', 'cells': [2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 'Xiaomi Mi 12'], 'id': 139864924938592, 'x': None, 'y': None}
+{'a': 'Rows', 'cells': [3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 'Google Pixel 6'], 'id': 139864924938688, 'x': None, 'y': None}
+{'a': 'Rows', 'cells': [5, 5, 4, 4, 4, 4, 4, 4, 4, 4, 'OnePlus 9T'], 'id': 139864924938784, 'x': None, 'y': None}
+{'a': 'Rows', 'cells': [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 'iPhone 13'], 'id': 139864924938880, 'x': None, 'y': None}
+{'a': 'Rows', 'cells': [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 'Samsung Galaxy S21'], 'id': 139864924938976, 'x': None, 'y': None}
+{'domain': 'Mobile phones', 'cols': [['Budget Friendly', 4, 2, 3, 5, 4, 1, 'Premium'], ['Small Screen', 4, 2, 3, 5, 4, 1, 'Large Screen'], ['Low Battery Life', 5, 3, 2, 4, 4, 1, 'High Battery Life'], ['Limited Storage', 5, 3, 2, 4, 4, 1, 'High Storage'], ['Average Camera', 5, 3, 2, 4, 4, 1, 'High-end Camera'], ['Plastic Body', 5, 3, 2, 4, 4, 1, 'Metal Body'], ['No Water Resistance', 5, 3, 2, 4, 4, 1, 'Water Resistance'], ['Older OS Version', 5, 3, 2, 4, 4, 1, 'Latest OS Version'], ['No Fast Charging', 5, 3, 2, 4, 4, 1, 'Fast Charging Support'], ['No 5G Support', 5, 3, 2, 4, 4, 1, '5G Support']], 'rows': [['_', '_', '_', '_', '_', 'Samsung Galaxy S21'], ['_', '_', '_', '_', 'iPhone 13'], ['_', '_', '_', 'OnePlus 9T'], ['_', '_', 'Google Pixel 6'], ['_', 'Xiaomi Mi 12'], ['Realme GT Neo 2']]}
+repRows : passing
+84
+|.. 37
+|.. |.. 37
+|.. |.. |.. No Water Resistance:Water Resistance
+|.. |.. |.. Low Battery Life:High Battery Life
+|.. |.. 37
+|.. |.. |.. Plastic Body:Metal Body
+|.. |.. |.. 37
+|.. |.. |.. |.. Average Camera:High-end Camera
+|.. |.. |.. |.. Limited Storage:High Storage
+|.. 84
+|.. |.. 37
+|.. |.. |.. Small Screen:Large Screen
+|.. |.. |.. Budget Friendly:Premium
+|.. |.. 37
+|.. |.. |.. No 5G Support:5G Support
+|.. |.. |.. 37
+|.. |.. |.. |.. No Fast Charging:Fast Charging Support
+|.. |.. |.. |.. Older OS Version:Latest OS Version
+None
+synonyms : passing
+71
+|.. 42
+|.. |.. Google Pixel 6
+|.. |.. 53
+|.. |.. |.. Samsung Galaxy S21
+|.. |.. |.. Xiaomi Mi 12
+|.. 38
+|.. |.. Realme GT Neo 2
+|.. |.. 31
+|.. |.. |.. OnePlus 9T
+|.. |.. |.. iPhone 13
+None
+prototypes : passing
 
-y	mid	{ :Lbs- 2970.42 :Acc+ 15.57 :Mpg+ 23.84}
- 	div	{ :Lbs- 846.84 :Acc+ 2.76 :Mpg+ 8.34}
-x	mid	{ :Clndrs 5.45 :Volume 193.43 :Model 76.01 :origin 1}
- 	div	{ :Clndrs 1.7 :Volume 104.27 :Model 3.7 :origin 1.3273558482394003}
-.
+A Realme GT Neo 2
+B Xiaomi Mi 12
+C Google Pixel 6
+D OnePlus 9T
+E iPhone 13
+F Samsung Galaxy S21
 
-============================== 5 passed in 0.02s ==============================
+{C             A      }
+{                     }
+{                     }
+{                     }
+{                     }
+{         E           }
+{    B    D           }
+{                     }
+None
+position : passing
+77
+|.. 36
+|.. |.. iPhone 13
+|.. |.. 38
+|.. |.. |.. Realme GT Neo 2
+|.. |.. |.. OnePlus 9T
+|.. 53
+|.. |.. Samsung Galaxy S21
+|.. |.. 38
+|.. |.. |.. Xiaomi Mi 12
+|.. |.. |.. Google Pixel 6
+84
+|.. 37
+|.. |.. 37
+|.. |.. |.. Low Battery Life:High Battery Life
+|.. |.. |.. Limited Storage:High Storage
+|.. |.. 37
+|.. |.. |.. No Water Resistance:Water Resistance
+|.. |.. |.. 37
+|.. |.. |.. |.. Plastic Body:Metal Body
+|.. |.. |.. |.. Average Camera:High-end Camera
+|.. 84
+|.. |.. 37
+|.. |.. |.. Small Screen:Large Screen
+|.. |.. |.. Budget Friendly:Premium
+|.. |.. 37
+|.. |.. |.. No 5G Support:5G Support
+|.. |.. |.. 37
+|.. |.. |.. |.. No Fast Charging:Fast Charging Support
+|.. |.. |.. |.. Older OS Version:Latest OS Version
+
+A Realme GT Neo 2
+B Xiaomi Mi 12
+C Google Pixel 6
+D OnePlus 9T
+E iPhone 13
+F Samsung Galaxy S21
+
+{E              F     }
+{                     }
+{                     }
+{                     }
+{                     }
+{      B  C           }
+{D                    }
+None
+every : passing
+
+============================================================== 9 passed, 2 warnings in 0.06s ==============================================================
