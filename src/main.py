@@ -1,54 +1,66 @@
+# Import necessary modules
 from tests import *
 import utils
 
-def main(inputs, help, funcs, saved = {}, fails = 0):
-    for k, v in utils.cli(utils.settings(help)).items():
-        inputs[k] = v
-        saved[k] = v
+def main(inputs, help_message, functions, saved_inputs = {}, fail_count = 0):
+    """
+    The main function to run tests.
+    :param inputs: dict, input arguments
+    :param help_message: str, help message to be displayed
+    :param functions: dict, a dictionary containing the functions to be tested
+    :param saved_inputs: dict, a dictionary to store the inputs
+    :param fail_count: int, number of test cases failed
+    """
+    # Get input arguments using command-line interface
+    for key, value in utils.cli(utils.settings(help_message)).items():
+        inputs[key] = value
+        saved_inputs[key] = value
+    
+    # If 'help' flag is passed, print help message and exit
     if inputs["help"]:
-        print(help)
+        print(help_message)
     else:
         print("Testing...")
-        for what in funcs:
-            if inputs["go"] == "data" or what == inputs["go"]:
-                for k,v in saved.items():
-                    inputs[k] = v
-                if funcs[what]() == False:
-                    fails = fails + 1
-                    print(what, ": failing")
+        # Loop through the functions and run tests on selected function(s)
+        for function_name in functions:
+            if inputs["go"] == "data" or function_name == inputs["go"]:
+                # Restore saved inputs
+                for key, value in saved_inputs.items():
+                    inputs[key] = value
+                # Run the selected function and check if it passes or fails
+                if functions[function_name]() == False:
+                    fail_count = fail_count + 1
+                    print(function_name, ": failing")
                 else:
-                    print(what, ": passing")
-    exit(fails)
+                    print(function_name, ": passing")
+    exit(fail_count)
 
-the = {'dump': False, 'go': 'data', 'help': False, 'seed': 937162211, 'file' : '../etc/data/repgrid3.csv'}
+# Create a dictionary containing test functions
+test_functions = {}
+def add_test_function(key, description, function):
+    """
+    A helper function to add test functions to the dictionary.
+    :param key: str, key name for the function
+    :param description: str, description of the function
+    :param function: function, the test function to be added
+    """
+    test_functions[key] = function
+    # Update help message with the added test function
+    inputs.help_string = inputs.help_string + ("  -g  %s\t%s\n" % (key, description))
 
-help = """"   
-grid.lua : a rep grid processor
-(c)2022, Tim Menzies <timm@ieee.org>, BSD-2 
-USAGE: grid.lua  [OPTIONS] [-g ACTION]
-OPTIONS:
-  -d  --dump    on crash, dump stack   = false
-  -f  --file    name of file           = ../etc/data/repgrid3.csv
-  -g  --go      start-up action        = data
-  -h  --help    show help              = false
-  -p  --p       distance coefficient   = 2
-  -s  --seed    random number seed     = 937162211
-ACTIONS:
-"""
-egs = {}
-def eg(key, str, func):
-    egs[key] = func
-    inputs.help = inputs.help + ("  -g  %s\t%s\n" % (key,str))
+# Add test functions to the dictionary
+add_test_function("sym", "check syms", test_sym)
+add_test_function("num", "check nums", test_nums)
+add_test_function("the", "show settings", test_the)
+add_test_function("repCols", "check repCols", test_repCols)
+add_test_function("repRows", "check repRows", test_repRows)
+add_test_function("synonyms", "check synonyms", test_synonyms)
+add_test_function("prototypes", "check prototypes", test_prototypes)
+add_test_function("position", "check position", test_position)
+add_test_function("every", "check every", test_every)
 
-eg("sym","check syms",test_sym)
-eg("num","check nums",test_nums)
-eg("the","show settings", test_the)
-eg("repCols","check repCols",test_repCols)
-eg("repRows","check repRows",test_repRows)
-eg("synonyms","check synonyms", test_synonyms)
-eg("prototypes","check prototypes",test_prototypes)
-eg("position","check position", test_position)
-eg("every","check every", test_every)
+# Print the test functions dictionary
+print(test_functions)
 
-print(egs)
-main(inputs.the, inputs.help, egs)
+# Run the tests using the main function
+main(inputs.the, inputs.help_string, test_functions)
