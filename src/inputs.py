@@ -1,6 +1,6 @@
 the = {'dump': False, 'go': 'data', 'help': False, 'seed': 937162211, 'file' : '../etc/data/repgrid3.csv'}
 
-help = """"   
+help_string = """"   
 grid.lua : a rep grid processor
 (c)2022, Tim Menzies <timm@ieee.org>, BSD-2 
 USAGE: grid.lua  [OPTIONS] [-g ACTION]
